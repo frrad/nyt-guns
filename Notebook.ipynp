@@ -1,0 +1,286 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "import matplotlib.pyplot as plt\n",
+    "import pandas as pd\n",
+    "import json\n",
+    "%matplotlib inline  "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "with open('wpd.json', 'r') as f:\n",
+    "    data = ''.join(f.readlines())\n",
+    "\n",
+    "data = json.loads(data)\n",
+    "extract = list()\n",
+    "\n",
+    "for pt in data['datasetColl'][0]['data']:\n",
+    "    [guns, shooters] = pt['value']\n",
+    "    country = ''\n",
+    "    if guns > 80:\n",
+    "        country = 'united states'\n",
+    "    if shooters > 30:\n",
+    "        country = 'yemen'\n",
+    "\n",
+    "    extract.append([guns, shooters, country])\n",
+    "\n",
+    "\n",
+    "frame = pd.DataFrame(extract, columns=['guns', 'shooters', 'country'])\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<matplotlib.axes._subplots.AxesSubplot at 0x7cdb14e3c950>"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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\nAElFTkSuQmCC\n",
+      "text/plain": [
+       "<matplotlib.figure.Figure at 0x7cdb10e6b850>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "frame.plot.scatter('guns','shooters')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style>\n",
+       "    .dataframe thead tr:only-child th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: left;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>guns</th>\n",
+       "      <th>shooters</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>guns</th>\n",
+       "      <td>1.000000</td>\n",
+       "      <td>0.529725</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>shooters</th>\n",
+       "      <td>0.529725</td>\n",
+       "      <td>1.000000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "              guns  shooters\n",
+       "guns      1.000000  0.529725\n",
+       "shooters  0.529725  1.000000"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "frame.corr()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style>\n",
+       "    .dataframe thead tr:only-child th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: left;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>guns</th>\n",
+       "      <th>shooters</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>guns</th>\n",
+       "      <td>1.000000</td>\n",
+       "      <td>0.423134</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>shooters</th>\n",
+       "      <td>0.423134</td>\n",
+       "      <td>1.000000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "              guns  shooters\n",
+       "guns      1.000000  0.423134\n",
+       "shooters  0.423134  1.000000"
+      ]
+     },
+     "execution_count": 19,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "nous = frame[frame['country']!='united states']\n",
+    "nous.corr()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style>\n",
+       "    .dataframe thead tr:only-child th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: left;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>guns</th>\n",
+       "      <th>shooters</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>guns</th>\n",
+       "      <td>1.00000</td>\n",
+       "      <td>0.05337</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>shooters</th>\n",
+       "      <td>0.05337</td>\n",
+       "      <td>1.00000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "             guns  shooters\n",
+       "guns      1.00000   0.05337\n",
+       "shooters  0.05337   1.00000"
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "neither = frame[(frame['country']!='united states') & (frame['country']!='yemen')]\n",
+    "neither.corr()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 2",
+   "language": "python",
+   "name": "python2"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 2
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython2",
+   "version": "2.7.13"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
